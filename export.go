@@ -1,13 +1,14 @@
 package main
 
 import (
+	"C"
 	"fmt"
 	"net/http"
 	"strings"
 )
 
 //export Getconv
-func Getconv() [3]string {
+func Getconv() *C.char {
 	var body string
 	resp, err := http.Get("https://v6.exchangerate-api.com/v6/831604053925ff6a3be209cc/latest/RUB")
 
@@ -36,7 +37,8 @@ func Getconv() [3]string {
 	var strU = body[strings.Index(body, "\"USD"):] //обрезаем строку до "USD"
 	rtn[2] = strU[:strings.Index(strU, ",")]       //обрезаем строку после " "USD": x.xxxxx "
 
-	return rtn
+	combined := strings.Join(rtn[:], "\n")
+	return C.CString(combined)
 }
 func main() {
 	fmt.Println(Getconv())
