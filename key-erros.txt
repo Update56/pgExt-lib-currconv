@@ -1,0 +1,20 @@
+1. Ошибка: попытка вернуть указатель на массив.
+Код: func Getconv() *[3]C.float {... return &floats}
+Вылет: .\main.go:12:17: Go type not supported in export: [3]_Ctype_float
+Объяснение: cgo не поддерживает экспорт массивов.
+
+2. Ошибка: несовместимость типов float32 и _Ctype_float
+Код: floats[0] = getFloat(selectCurr("\"EUR", body))
+Вылет: .\main.go:28:14: cannot use getFloat(selectCurr("\"JPY", body)) (value of type float32) as _Ctype_float value in assignment
+Объяснение: необходимо сделать явное преобразование floats[1] = C.float(...)
+
+3. Ошибка: попытка передать указатель на массив, созданный в Go, в C-код.
+Код: func Getconv() *C.float {}
+Вылет: panic: runtime error: cgo result has Go pointer
+Объяснение: попытка передать указатель на массив, созданный в Go, в C-код, что запрещено. Это связано с ограничениями в Go для предотвращения утечек памяти и проблем с управлением памятью между Go и C
+Решение: выделить память для массива в C-коде и передать указатель на эту память в функцию Go для заполнения данными
+
+4. Ошибка: неправильная конвертация указателя C.float в массив *[3]C.float
+Код: floats := (*[3]C.float)(rates)
+Вылет: ./export.go:25:26: cannot convert rates (variable of type *_Ctype_float) to type *[3]_Ctype_float
+Решение: преобразовать Си-указатель в Go-unsafe floats := (*[3]C.float)(unsafe.Pointer(rates))
