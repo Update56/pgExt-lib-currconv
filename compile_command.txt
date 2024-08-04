@@ -1,0 +1,9 @@
+Linux:
+export CGO_ENABLED=1
+go build -o libgetconv.a -buildmode=c-archive export.go
+gcc -o main main.c libgetconv.a -lpthread
+
+Linux:
+set CGO_ENABLED=1
+go build -o libgetconv.a -buildmode=c-archive export.go
+gcc -o main main.c libgetconv.a -lpthread
