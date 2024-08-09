@@ -1,13 +1,14 @@
 package main
 
+import "C"
+
 import (
-	"C"
 	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
+	"unsafe"
 )
-import "unsafe"
 
 //export Getconv
 func Getconv(rates *C.float) {
