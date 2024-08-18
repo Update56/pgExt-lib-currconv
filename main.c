@@ -1,18 +1,20 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include "libgetconv.h"
+#include <stdio.h>
+#include <dlfcn.h>
 
 int main() {
-    char *currency = "USD";
+    void *handle;
+    char* currency = "USD";
+    handle = dlopen ("libgetconv.so", RTLD_NOW | RTLD_GLOBAL);
+    if (!handle) {
+        fputs (dlerror(), stderr);
+        exit(1);
+    }
 
-    // Получаем строку от Go
-    char* body = GetBody(currency);
-    
-    // Печатаем строку
-    printf("Body: %s\n", body);
-    
-    // Освобождаем память, выделенную в Go
-    free(body);
-    
+    float rates[3];
+    char*(*getbody)(char*) = dlsym(handle, "GetBody");
+    char* body = getbody(currency);
+
+    printf("%s", body);
     return 0;
 }
