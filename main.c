@@ -10,8 +10,6 @@ int main() {
         fputs (dlerror(), stderr);
         exit(1);
     }
-
-    float rates[3];
     char*(*getbody)(char*) = dlsym(handle, "GetBody");
     char* body = getbody(currency);
 
