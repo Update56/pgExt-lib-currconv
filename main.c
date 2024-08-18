@@ -1,11 +1,18 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "libgetconv.h"
 
 int main() {
-    float rates[3];
-    Getconv(rates);
-    printf("EUR rate: %f\n", rates[0]);
-    printf("JPY rate: %f\n", rates[1]);
-    printf("USD rate: %f\n", rates[2]);
+    char *currency = "USD";
+
+    // Получаем строку от Go
+    char* body = GetBody(currency);
+    
+    // Печатаем строку
+    printf("Body: %s\n", body);
+    
+    // Освобождаем память, выделенную в Go
+    free(body);
+    
     return 0;
 }
