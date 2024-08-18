@@ -2,9 +2,9 @@ package main
 
 import (
 	"C"
+	"fmt"
 	"net/http"
 )
-import "fmt"
 
 //export GetBody
 func GetBody(currency *C.char) *C.char {
@@ -13,7 +13,10 @@ func GetBody(currency *C.char) *C.char {
 	curr := C.GoString(currency)
 	url := fmt.Sprintf("https://v6.exchangerate-api.com/v6/831604053925ff6a3be209cc/latest/%s", curr)
 
-	resp, _ := http.Get(url)
+	resp, err := http.Get(url)
+	if err != nil {
+		return C.CString("Conn error")
+	}
 	defer resp.Body.Close()
 
 	for {
